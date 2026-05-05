@@ -1,2 +1,20 @@
-# tp-testes
-Sistema de automação para notificação assíncrona de e-mails, incluindo validação por testes na aplicação
+# Trabalho Prático - Teste de Software
+Sistema de automação para notificação assíncrona de e-mails, incluindo validação por testes na aplicação.
+
+Integrantes: Manuela Monteiro Fernandes de Oliveira e Sarah Menks Sperber
+
+**Funcionalidades:**
+- Envio automático mensal de informes/newsletter para uma lista de e-mails:
+  - Essa lista é atualizável, ou seja, pode-se adicionar, editar ou remover os remetentes da mensagem;
+  - A mensagem também é customizável e pode ser editada antes do e-mail ser enviado;
+ 
+**Tecnologias:**
+- Linguagem utilizada: Python 3.12 com bibliotecas (como pandas, smtplib e email);
+- Interação inicial via linha de comando;
+- Testes que serão executados:
+  - Testes de Unidade;
+  - Testes de Integração; 
+
+**Pontos futuros a serem considerados:**
+- Criação de uma interface gráfica;
+- Integração com planilhas para enviar um e-mail quando reconhece uma nova entrada;

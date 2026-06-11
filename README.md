@@ -18,3 +18,7 @@ Sistema de automação para notificação assíncrona de e-mails, incluindo vali
 - Integração com planilhas para enviar um e-mail quando reconhece uma nova entrada;
 
 *Integrantes*: Ari Gonçalves da Silva Filho, Manuela Monteiro Fernandes de Oliveira e Sarah Menks Sperber
+
+
+**Referências:**
+- [https://realpython.com/python-send-email/](https://realpython.com/python-send-email/)

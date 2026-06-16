@@ -1,4 +1,35 @@
 # Trabalho Prático - Teste de Software
+
+## Setup
+
+### Backend
+
+```bash
+cd backend
+
+python3 -m venv venv
+source venv/bin/activate
+
+pip3 install -r requirements.txt
+
+uvicorn main:app --reload
+```
+
+### Frontend
+
+
+```bash
+cd frontend
+
+npm install
+
+npm run dev
+```
+
+
+---
+
+
 Sistema de automação para notificação assíncrona de e-mails, incluindo validação por testes na aplicação.
 
 **Funcionalidades:**

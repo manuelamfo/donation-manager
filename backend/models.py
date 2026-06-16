@@ -12,7 +12,7 @@ class User(SQLModel, table=True):
 class Donor(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
-    email: str
+    email: str = Field(unique=True, index=True)
     donations: List["Donation"] = Relationship(back_populates="donor")
 
 class Donation(SQLModel, table=True):

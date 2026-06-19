@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import SQLModel
 from database import engine
 
-from routers import users
+from routers import auth
 
 app = FastAPI(title="Gerenciador de Doações")
 
@@ -19,4 +19,4 @@ app.add_middleware(
 def on_startup():
     SQLModel.metadata.create_all(engine)
 
-app.include_router(users.router)
+app.include_router(auth.router)

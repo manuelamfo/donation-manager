@@ -80,6 +80,44 @@ export function useDonations() {
         }
     };
 
+    const confirmDelete = (id) => {
+        setConfirmDialog({
+            isOpen: true,
+            title: 'Remover Doação',
+            message: 'Tem certeza que deseja remover esta doação permanentemente?',
+            onConfirm: async () => {
+                try {
+                    await deleteDonation(id);
+                    setDonations(donations.filter(d => d.id !== id));
+                    setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+                    closeConfirmDialog();
+                } catch (error) {
+                    closeConfirmDialog();
+                    showError("Erro ao remover doação.");
+                }
+            }
+        });
+    };
+
+    const confirmBulkDelete = () => {
+        setConfirmDialog({
+            isOpen: true,
+            title: 'Remover Selecionadas',
+            message: `Você está prestes a apagar ${selectedIds.length} doações. Esta ação não pode ser desfeita.`,
+            onConfirm: async () => {
+                try {
+                    await Promise.all(selectedIds.map(id => deleteDonation(id)));
+                    setDonations(donations.filter(d => !selectedIds.includes(d.id)));
+                    setSelectedIds([]);
+                    closeConfirmDialog();
+                } catch (error) {
+                    closeConfirmDialog();
+                    showError("Erro ao remover algumas doações.");
+                }
+            }
+        });
+    };
+
     const groupedDonations = groupDonationsByMonth(donations);
 
     return {
@@ -99,6 +137,8 @@ export function useDonations() {
         handleSelectMonthAll,
         isAllMonthSelected,
         handleSelectOne,
+        confirmDelete,
+        confirmBulkDelete,
         getTodayString
     };
 }

@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import Button from '../components/Button';
+import Input from '../components/Input';
 import ConfirmModal from '../components/ConfirmModal';
 import Toast from '../components/Toast';
 import { FiTrash2, FiPlus, FiX, FiChevronDown, FiChevronUp } from 'react-icons/fi';
@@ -15,7 +17,7 @@ export default function DashboardPage({ onLogout }) {
     groupedDonations, selectedIds, isModalOpen, setIsModalOpen, loading,
     formData, setFormData, toast, closeToast, confirmDialog, closeConfirmDialog,
     openMonths, toggleMonth, handleSelectMonthAll, isAllMonthSelected,
-    handleSelectOne, confirmDelete, confirmBulkDelete, handleCreateSubmit, getTodayString
+    handleSelectOne, confirmDelete, confirmBulkDelete, getTodayString
   } = useDonations();
 
   const handleLogoutClick = () => {
@@ -37,6 +39,13 @@ export default function DashboardPage({ onLogout }) {
       <main className="pt-28 max-w-6xl mx-auto px-4 sm:px-6 pb-12">
         <div className="flex flex-col gap-4 items-start sm:flex-row sm:justify-between sm:items-end mb-10">
           <h1 className="text-4xl sm:text-5xl font-black tracking-tighter text-black select-none">Doações</h1>
+          <div className="flex gap-3 items-center w-full sm:w-auto">
+            {selectedIds.length > 0 && (
+              <button onClick={confirmBulkDelete} className="h-10 px-4 flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-md text-sm font-semibold transition-colors duration-150 cursor-pointer whitespace-nowrap">
+                <FiTrash2 className="w-4 h-4" /> Remover selecionadas ({selectedIds.length})
+              </button>
+            )}
+          </div>
         </div>
 
         {loading ? (

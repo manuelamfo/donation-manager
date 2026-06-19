@@ -33,3 +33,8 @@ export const createDonation = async (donationData) => {
 export const deleteDonation = async (id) => {
     await api.delete(`/donations/${id}`);
 };
+
+export const sendEmail = async (emailData) => {
+    const response = await api.post('/donations/send-email', emailData);
+    return response.data;
+};

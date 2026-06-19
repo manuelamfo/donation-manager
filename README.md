@@ -4,6 +4,20 @@
 
 ### Backend
 
+É preciso criar um arquivo .env com a seguinte configuração:
+
+```
+ADMIN_EMAIL=admin@gmail.com
+ADMIN_PASSWORD=admin123
+
+SECRET_KEY=chave-super-secreta
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=60
+```
+
+Depois, para rodar a API, execute:
+
+
 ```bash
 cd backend
 

@@ -1,5 +1,5 @@
 from typing import List, Optional
-from datetime import datetime
+from datetime import date
 from sqlmodel import Field, SQLModel, Relationship
 
 class Donor(SQLModel, table=True):
@@ -11,7 +11,7 @@ class Donor(SQLModel, table=True):
 class Donation(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     amount: float
-    timestamp: datetime = Field(default_factory=datetime.now)
+    date: date
     
     donor_id: int = Field(foreign_key="donor.id")
     donor: Donor = Relationship(back_populates="donations")

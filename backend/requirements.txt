@@ -3,3 +3,6 @@ uvicorn
 sqlmodel
 pytest
 pytest-cov
+pydantic-settings
+pydantic[email]
+PyJWT

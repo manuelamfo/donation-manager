@@ -118,6 +118,23 @@ export function useDonations() {
         });
     };
 
+    const handleCreateSubmit = async (e) => {
+        e.preventDefault();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) return showError("Por favor, insira um endereço de e-mail válido.");
+        if (parseFloat(formData.amount) <= 0) return showError("O valor deve ser maior que zero.");
+        if (formData.date > getTodayString()) return showError("A data não pode ser no futuro.");
+
+        try {
+            await createDonation({ ...formData, amount: parseFloat(formData.amount) });
+            setIsModalOpen(false);
+            setFormData({ name: '', email: '', amount: '', date: '' });
+            fetchAllDonations();
+        } catch (error) {
+            showError(error.response?.data?.detail || "Erro ao criar doação.");
+        }
+    };
+
     const groupedDonations = groupDonationsByMonth(donations);
 
     return {
@@ -139,6 +156,7 @@ export function useDonations() {
         handleSelectOne,
         confirmDelete,
         confirmBulkDelete,
+        handleCreateSubmit,
         getTodayString
     };
 }

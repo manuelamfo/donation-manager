@@ -17,7 +17,7 @@ export default function DashboardPage({ onLogout }) {
     groupedDonations, selectedIds, isModalOpen, setIsModalOpen, loading,
     formData, setFormData, toast, closeToast, confirmDialog, closeConfirmDialog,
     openMonths, toggleMonth, handleSelectMonthAll, isAllMonthSelected,
-    handleSelectOne, confirmDelete, confirmBulkDelete, getTodayString
+    handleSelectOne, confirmDelete, confirmBulkDelete, handleCreateSubmit, getTodayString
   } = useDonations();
 
   const handleLogoutClick = () => {
@@ -45,6 +45,11 @@ export default function DashboardPage({ onLogout }) {
                 <FiTrash2 className="w-4 h-4" /> Remover selecionadas ({selectedIds.length})
               </button>
             )}
+            <div className="w-full sm:w-44 -mt-2">
+              <Button onClick={() => setIsModalOpen(true)}>
+                <span className="flex items-center justify-center gap-2 cursor-pointer"><FiPlus className="w-4 h-4" /> Nova Doação</span>
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -107,6 +112,25 @@ export default function DashboardPage({ onLogout }) {
           </div>
         )}
       </main>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-900/40 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md p-8 relative border border-zinc-200 animate-in fade-in zoom-in-95 duration-150">
+            <button onClick={() => setIsModalOpen(false)} className="absolute top-6 right-6 text-zinc-400 hover:text-black transition-colors cursor-pointer p-1 rounded-md hover:bg-zinc-50"><FiX className="w-6 h-6" /></button>
+            <h2 className="text-2xl font-bold text-black tracking-tight mb-8 select-none">Registrar Doação</h2>
+            <form onSubmit={handleCreateSubmit} className="flex flex-col gap-5">
+              <Input label="Nome do Doador" placeholder="Ex: Gabriel" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+              <Input label="E-mail" type="email" placeholder="nome@email.com" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+              <Input label="Valor (R$)" type="number" step="0.01" min="0.01" placeholder="0,00" required value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })} />
+              <Input label="Data da Doação" type="date" required max={getTodayString()} value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} />
+              <div className="mt-4 flex flex-col-reverse sm:flex-row gap-3 justify-end items-center border-t border-zinc-100 pt-6">
+                <button type="button" onClick={() => setIsModalOpen(false)} className="w-full sm:w-auto px-4 py-2.5 text-sm font-semibold text-zinc-500 hover:text-black transition-colors cursor-pointer rounded-md hover:bg-zinc-50">Cancelar</button>
+                <div className="w-full sm:w-40"><Button type="submit">Salvar Registro</Button></div>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

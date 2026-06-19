@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import logoImg from '../assets/logo.png'; 
-
 import { FiUser, FiLogOut } from 'react-icons/fi';
 
 export default function Navbar({ onLogout }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleLogoutClick = () => {
+    setIsOpen(false);
+    onLogout();
+  };
 
   return (
     <nav className="fixed top-0 left-0 w-full h-16 bg-white border-b border-zinc-200 flex justify-between items-center px-6 z-50">
@@ -35,10 +39,7 @@ export default function Navbar({ onLogout }) {
               </div>
               
               <button
-                onClick={() => {
-                  setIsOpen(false);
-                  onLogout();
-                }}
+                onClick={handleLogoutClick}
                 className="w-full text-left px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors flex items-center gap-2 font-medium"
               >
                 <FiLogOut className="w-4 h-4 text-zinc-500" />

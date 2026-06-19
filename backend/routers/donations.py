@@ -4,7 +4,7 @@ from typing import List
 
 from database import get_session
 from models import Donation, Donor
-from schemas.donations import DonationCreate, DonationResponse
+from schemas.donations import DonationCreate, DonationResponse, EmailSendRequest
 
 router = APIRouter(prefix="/donations", tags=["Donations"])
 
@@ -61,3 +61,9 @@ def delete_donation(donation_id: int, db: Session = Depends(get_session)):
     db.delete(donation)
     db.commit()
     return None
+
+@router.post("/send-email", status_code=status.HTTP_200_OK)
+def send_email_to_donors(payload: EmailSendRequest, db: Session = Depends(get_session)):
+    # aqui deve conectar com o envio de email
+    
+    return {"message": f"E-mail enviado com sucesso para {len(payload.emails)} contato(s)!"}

@@ -5,7 +5,7 @@ import logoImg from '../assets/logo.png';
 import Input from '../components/Input';
 import Button from '../components/Button';
 
-// 🚀 Importa a função isolada de requisição
+// Importa a função isolada de requisição
 import { loginUser } from '../services/api';
 
 export default function LoginPage({ onLogin }) {
@@ -19,6 +19,12 @@ export default function LoginPage({ onLogin }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        
+        if (password.length < 6) {
+            setError('A senha deve ter no mínimo 6 caracteres.');
+            return; // não chama a API
+        }
+        
         setLoading(true);
 
         try {

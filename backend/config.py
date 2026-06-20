@@ -8,16 +8,15 @@ class Settings(BaseSettings):
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     
+    SMTP_EMAIL: str
+    SMTP_SENHA: str 
     SMTP_HOST: str
     SMTP_PORT: int = 587
-    SMTP_USUARIO: str 
-    SMTP_SENHA: str 
-    EMAIL_REMETENTE: str
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
     def smtp_configurado(self) -> bool:
-        return bool(self.SMTP_USUARIO and self.SMTP_SENHA and self.EMAIL_REMETENTE)
+        return bool(self.SMTP_EMAIL and self.SMTP_SENHA)
 
 
 settings = Settings()

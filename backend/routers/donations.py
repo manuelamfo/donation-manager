@@ -71,15 +71,15 @@ def delete_donation(donation_id: int, db: Session = Depends(get_session)):
 def _enviar_email(destinatario: str, subject: str, body: str) -> None:
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
-    msg["From"] = settings.EMAIL_REMETENTE
+    msg["From"] = settings.SMTP_EMAIL
     msg["To"] = destinatario
     msg.attach(MIMEText(body, "plain", "utf-8"))
 
     with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT) as smtp:
         smtp.ehlo()
         smtp.starttls()
-        smtp.login(settings.SMTP_USUARIO, settings.SMTP_SENHA)
-        smtp.sendmail(settings.EMAIL_REMETENTE, destinatario, msg.as_string())
+        smtp.login(settings.SMTP_EMAIL, settings.SMTP_SENHA)
+        smtp.sendmail(settings.SMTP_EMAIL, destinatario, msg.as_string())
 
 
 @router.post("/send-email", status_code=status.HTTP_200_OK)
@@ -87,7 +87,7 @@ def send_email_to_donors(payload: EmailSendRequest, db: Session = Depends(get_se
     if not settings.smtp_configurado():
         raise HTTPException(
             status_code=400,
-            detail="SMTP não configurado. Preencha SMTP_USUARIO, SMTP_SENHA e EMAIL_REMETENTE no .env"
+            detail="SMTP não configurado. Preencha SMTP_EMAIL e SMTP_SENHA no .env"
         )
 
     success = 0

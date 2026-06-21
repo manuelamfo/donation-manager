@@ -4,6 +4,7 @@ from sqlmodel import SQLModel
 from database import engine
 
 from routers import auth
+from routers import donations
 
 app = FastAPI(title="Gerenciador de Doações")
 
@@ -20,3 +21,4 @@ def on_startup():
     SQLModel.metadata.create_all(engine)
 
 app.include_router(auth.router)
+app.include_router(donations.router)

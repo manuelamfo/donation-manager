@@ -63,3 +63,8 @@ jobs:
           cd frontend
           npm test -- --run || echo "Nenhum teste configurado no frontend ainda."
         shell: bash
+        
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

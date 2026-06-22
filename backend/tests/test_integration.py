@@ -122,3 +122,21 @@ def test_criar_doacao(client):
     assert data["donor_name"] == "Bárbara Dias"
     assert data["donor_email"] == "barbara@email.com"
     assert data["amount"] == 30.0
+
+
+def test_listar_doacoes(client):
+    # Cria uma doação primeiro
+    client.post("/donations/", json={
+        "name": "Daniel Rodrigues", "email": "daniel@email.com",
+        "amount": 25.0, "date": "2026-06-03"
+    })
+
+    client.post("/donations/", json={
+        "name": "Pedro Henrique", "email": "pedro@email.com",
+        "amount": 23.0, "date": "2026-06-05"
+    })
+
+    response = client.get("/donations/")
+
+    assert response.status_code == status.HTTP_200_OK
+    assert len(response.json()) == 2

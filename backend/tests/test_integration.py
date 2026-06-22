@@ -105,3 +105,20 @@ def test_spy_send_email_to_donors_all_fail(mocker):
 
     assert dados["failures"][1]["email"] == "doador2@gmail.com"
     assert dados["failures"][1]["erro"] == "Servidor SMTP indisponível"
+
+# ---- Teste de integração com o banco de dados ----
+def test_criar_doacao(client):
+    payload = {
+        "name": "Bárbara Dias",
+        "email": "barbara@email.com",
+        "amount": "30.0",
+        "date": "2026-06-01"
+    }
+
+    response = client.post("/donations/", json=payload)
+
+    assert response.status_code == status.HTTP_201_CREATED
+    data = response.json()
+    assert data["donor_name"] == "Bárbara Dias"
+    assert data["donor_email"] == "barbara@email.com"
+    assert data["amount"] == 30.0

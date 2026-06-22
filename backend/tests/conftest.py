@@ -6,7 +6,7 @@ from sqlmodel.pool import StaticPool
 from ..main import app
 from ..database import get_session
 
-@pytest.fixture(name="engine", scope="session")
+@pytest.fixture(name="engine")
 def engine_fixture():
     engine = create_engine(
         "sqlite://",

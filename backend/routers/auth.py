@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
-from schemas.auth import LoginSchema
-from security import create_access_token
-from config import settings
+from ..schemas.auth import LoginSchema
+from ..security import create_access_token
+from ..config import settings
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 

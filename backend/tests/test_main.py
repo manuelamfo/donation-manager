@@ -74,3 +74,42 @@ def test_donation_create_valor_fracionado_e_aceito():
     )
 
     assert doacao.amount == 0.01
+
+# ---- Testes de unidade para a classe EmailSendRequest ----
+def test_email_send_request_payload_valido_instancia_sem_erro():
+    req = EmailSendRequest(
+        emails=["a@email.com", "b@email.com"],
+        subject="Obrigado",
+        body="Sua doação ajudou!",
+    )
+
+    assert len(req.emails) == 2
+
+
+def test_email_send_request_lista_vazia_levanta_validation_error():
+    with pytest.raises(ValidationError) as exc_info:
+        EmailSendRequest(emails=[], subject="Assunto", body="Corpo")
+
+    erros = exc_info.value.errors()
+    assert any(e["loc"][-1] == "emails" for e in erros)
+
+
+def test_email_send_request_email_invalido_na_lista_levanta_validation_error():
+    with pytest.raises(ValidationError):
+        EmailSendRequest(emails=["invalido"], subject="Assunto", body="Corpo")
+
+
+def test_email_send_request_assunto_vazio_levanta_validation_error():
+    with pytest.raises(ValidationError) as exc_info:
+        EmailSendRequest(emails=["a@email.com"], subject="", body="Corpo")
+
+    erros = exc_info.value.errors()
+    assert any(e["loc"][-1] == "subject" for e in erros)
+
+
+def test_email_send_request_corpo_vazio_levanta_validation_error():
+    with pytest.raises(ValidationError) as exc_info:
+        EmailSendRequest(emails=["a@email.com"], subject="Assunto", body="")
+
+    erros = exc_info.value.errors()
+    assert any(e["loc"][-1] == "body" for e in erros)

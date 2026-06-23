@@ -35,7 +35,7 @@ jobs:
       - name: Roda testes do backend com coverage
         run: |
           pytest backend/ --cov=backend --cov-report=xml
-          env:
+        env:
             ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
             ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
             SECRET_KEY: ${{ secrets.SECRET_KEY }}

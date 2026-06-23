@@ -13,6 +13,7 @@ export function useDonations() {
   const [openMonths, setOpenMonths] = useState({});
 
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [isEmailSending, setIsEmailSending] = useState(false);
   const [emailList, setEmailList] = useState([]);
   const [emailSubject, setEmailSubject] = useState('');
   const [emailBody, setEmailBody] = useState('');
@@ -165,12 +166,16 @@ export function useDonations() {
     if (!emailSubject.trim()) return showToastMsg("O assunto é obrigatório.");
     if (!emailBody.trim()) return showToastMsg("A mensagem é obrigatória.");
 
+    setIsEmailSending(true);
+
     try {
       const message = await sendEmail({ emails: emailList, subject: emailSubject, body: emailBody });
       setIsEmailModalOpen(false);
       showToastMsg(message.message, "success");
     } catch (error) {
       showToastMsg("Erro ao tentar enviar os e-mails.");
+    } finally {
+      setIsEmailSending(false);
     }
   };
 
@@ -182,7 +187,7 @@ export function useDonations() {
     handleSelectMonthAll, isAllMonthSelected, handleSelectOne, confirmDelete, confirmBulkDelete,
     handleCreateSubmit, getTodayString,
     
-    isEmailModalOpen, setIsEmailModalOpen, emailList, emailSubject, setEmailSubject,
+    isEmailModalOpen, isEmailSending, setIsEmailModalOpen, emailList, emailSubject, setEmailSubject,
     emailBody, setEmailBody, newEmailInput, setNewEmailInput, openEmailModal,
     handleAddEmailToList, handleRemoveEmailFromList, handleSendEmailSubmit
   };

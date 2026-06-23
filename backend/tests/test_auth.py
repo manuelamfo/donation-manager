@@ -4,7 +4,7 @@ Testes /auth/login.
 import jwt
 import pytest
 
-from config import settings
+from ..config import settings
 
 
 def test_login_com_credenciais_corretas_retorna_token(client):

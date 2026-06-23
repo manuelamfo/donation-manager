@@ -1,13 +1,18 @@
 from fastapi import APIRouter, HTTPException, status
-from schemas.auth import LoginSchema
-from security import create_access_token
-from config import settings
+from ..schemas.auth import LoginSchema
+from ..security import create_access_token
+from ..config import settings
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 @router.post("/login")
 def login(credentials: LoginSchema):
-    if credentials.email == settings.ADMIN_EMAIL and credentials.password == settings.ADMIN_PASSWORD:
+
+    # Para evitar problemas de espaços em branco no env
+    email_valido = credentials.email.strip() == settings.ADMIN_EMAIL.strip()
+    senha_valida = credentials.password.strip() == settings.ADMIN_PASSWORD.strip()
+    
+    if email_valido and senha_valida:
         
         access_token = create_access_token(data={"sub": credentials.email, "role": "admin"})
         

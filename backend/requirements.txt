@@ -2,7 +2,10 @@ fastapi
 uvicorn
 sqlmodel
 pytest
+pytest-mock
 pytest-cov
 pydantic-settings
 pydantic[email]
 PyJWT
+dotenv
+config

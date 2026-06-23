@@ -17,7 +17,7 @@ export default function DashboardPage({ onLogout }) {
     groupedDonations, selectedIds, isModalOpen, setIsModalOpen, loading, formData, setFormData,
     toast, closeToast, confirmDialog, closeConfirmDialog, openMonths, toggleMonth,
     handleSelectMonthAll, isAllMonthSelected, handleSelectOne, confirmDelete, confirmBulkDelete, handleCreateSubmit, getTodayString,
-    isEmailModalOpen, setIsEmailModalOpen, emailList, emailSubject, setEmailSubject,
+    isEmailModalOpen, isEmailSending, setIsEmailModalOpen, emailList, emailSubject, setEmailSubject,
     emailBody, setEmailBody, newEmailInput, setNewEmailInput, openEmailModal,
     handleAddEmailToList, handleRemoveEmailFromList, handleSendEmailSubmit
   } = useDonations();
@@ -144,6 +144,15 @@ export default function DashboardPage({ onLogout }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-900/40 backdrop-blur-sm">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl p-6 sm:p-8 relative border border-zinc-200 animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
             
+            {isEmailSending && (
+              <div className="absolute inset-0 bg-white/50 rounded-xl flex items-center justify-center z-10">
+                <div className="text-center">
+                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-black mb-2"></div>
+                  <p className="text-sm font-medium text-zinc-700">Enviando e-mail...</p>
+                </div>
+              </div>
+            )}
+
             <button onClick={() => setIsEmailModalOpen(false)} className="absolute top-6 right-6 text-zinc-400 hover:text-black transition-colors cursor-pointer p-1 rounded-md hover:bg-zinc-50"><FiX className="w-6 h-6" /></button>
             
             <h2 className="text-2xl font-bold text-black tracking-tight mb-2 select-none flex items-center gap-2">
@@ -190,7 +199,10 @@ export default function DashboardPage({ onLogout }) {
               
               <div className="mt-2 flex flex-col-reverse sm:flex-row gap-3 justify-end items-center border-t border-zinc-100 pt-6">
                 <button type="button" onClick={() => setIsEmailModalOpen(false)} className="w-full sm:w-auto px-4 py-2.5 text-sm font-semibold text-zinc-500 hover:text-black transition-colors cursor-pointer rounded-md hover:bg-zinc-50">Cancelar</button>
-                <div className="w-full sm:w-40"><Button type="submit">Enviar E-mail</Button></div>
+                <div className="w-full sm:w-40">
+                  <Button type="submit" disabled={isEmailSending}>
+                    {isEmailSending ? 'Enviando...' : 'Enviar E-mail'}
+                  </Button></div>
               </div>
             </form>
           </div>

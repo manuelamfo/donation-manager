@@ -6,10 +6,10 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 from typing import List
 
-from database import get_session
-from models import Donation, Donor
-from schemas.donations import DonationCreate, DonationResponse, EmailSendRequest
-from config import settings
+from ..database import get_session
+from ..models import Donation, Donor
+from ..schemas.donations import DonationCreate, DonationResponse, EmailSendRequest
+from ..config import settings
 
 router = APIRouter(prefix="/donations", tags=["Donations"])
 

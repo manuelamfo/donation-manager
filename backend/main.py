@@ -1,10 +1,13 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import SQLModel
-from database import engine
+from .database import engine
 
-from routers import auth
-from routers import donations
+from .routers import auth
+from .routers import donations
 
 app = FastAPI(title="Gerenciador de Doações")
 

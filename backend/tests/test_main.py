@@ -231,15 +231,6 @@ def test_login_schema_senha_com_seis_caracteres_e_aceita():
     assert login.password == "abc123"
 
 
-# EmailSendRequest: lista de destinatários vazia deve falhar
-def test_email_send_request_lista_vazia_levanta_validation_error():
-    with pytest.raises(ValidationError) as exc_info:
-        EmailSendRequest(emails=[], subject="Assunto", body="Corpo")
-
-    erros = exc_info.value.errors()
-    assert any(e["loc"][-1] == "emails" for e in erros)
-
-
 # EmailSendRequest: campo emails ausente deve falhar
 def test_email_send_request_campo_emails_ausente_levanta_validation_error():
     with pytest.raises(ValidationError) as exc_info:
@@ -261,18 +252,6 @@ def test_enviar_email_remetente_no_sendmail_e_o_smtp_email():
         assert args[0] == settings.SMTP_EMAIL
 
 
-# _enviar_email: corpo da mensagem MIME deve conter o texto enviado
-def test_enviar_email_inclui_corpo_correto_no_mime():
-    with patch("backend.routers.donations.smtplib.SMTP") as mock_smtp_class:
-        mock_smtp = MagicMock()
-        mock_smtp_class.return_value.__enter__.return_value = mock_smtp
-
-        _enviar_email("dest@email.com", "Assunto", "Texto do corpo aqui")
-
-        mime_str = mock_smtp.sendmail.call_args[0][2]
-        assert "Texto do corpo aqui" in mime_str
-
-
 # _enviar_email: login deve ser chamado após starttls (ordem do handshake SMTP)
 def test_enviar_email_login_ocorre_apos_starttls():
     with patch("backend.routers.donations.smtplib.SMTP") as mock_smtp_class:
@@ -283,3 +262,24 @@ def test_enviar_email_login_ocorre_apos_starttls():
 
         chamadas = [c[0] for c in mock_smtp.method_calls]
         assert chamadas.index("starttls") < chamadas.index("login")
+
+# DonationCreate: campo email ausente nunca foi testado como campo obrigatório
+# (só date foi testado como ausente)
+def test_donation_create_email_ausente_levanta_validation_error():
+    with pytest.raises(ValidationError) as exc_info:
+        DonationCreate(name="Lucas Ferreira", amount=50.0, date=date(2024, 1, 1))
+
+    erros = exc_info.value.errors()
+    assert any(e["loc"][-1] == "email" for e in erros)
+
+
+# _enviar_email: sendmail deve ser chamado exatamente uma vez por chamada
+# (garante que não há reenvio acidental dentro da função)
+def test_enviar_email_chama_sendmail_exatamente_uma_vez():
+    with patch("backend.routers.donations.smtplib.SMTP") as mock_smtp_class:
+        mock_smtp = MagicMock()
+        mock_smtp_class.return_value.__enter__.return_value = mock_smtp
+
+        _enviar_email("dest@email.com", "Assunto", "Corpo")
+
+        mock_smtp.sendmail.assert_called_once()

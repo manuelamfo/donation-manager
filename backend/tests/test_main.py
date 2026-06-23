@@ -113,3 +113,35 @@ def test_email_send_request_corpo_vazio_levanta_validation_error():
 
     erros = exc_info.value.errors()
     assert any(e["loc"][-1] == "body" for e in erros)
+
+
+# ---- Testes de unidade para a classe LoginSchema ----
+
+def test_login_schema_payload_valido_instancia_sem_erro():
+    login = LoginSchema(email="admin@email.com", password="senha123")
+
+    assert login.email == "admin@email.com"
+
+
+def test_login_schema_senha_curta_levanta_validation_error():
+    with pytest.raises(ValidationError) as exc_info:
+        LoginSchema(email="admin@email.com", password="123")
+
+    erros = exc_info.value.errors()
+    assert any(e["loc"][-1] == "password" for e in erros)
+
+
+def test_login_schema_email_invalido_levanta_validation_error():
+    with pytest.raises(ValidationError) as exc_info:
+        LoginSchema(email="nao-e-email", password="senha123")
+
+    erros = exc_info.value.errors()
+    assert any(e["loc"][-1] == "email" for e in erros)
+
+
+def test_login_schema_senha_ausente_levanta_validation_error():
+    with pytest.raises(ValidationError) as exc_info:
+        LoginSchema(email="admin@email.com")
+
+    erros = exc_info.value.errors()
+    assert any(e["loc"][-1] == "password" for e in erros)

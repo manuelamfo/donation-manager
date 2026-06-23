@@ -137,3 +137,79 @@ def test_login_schema_senha_ausente_levanta_validation_error():
 
     erros = exc_info.value.errors()
     assert any(e["loc"][-1] == "password" for e in erros)
+
+
+# ---- Testes de unidade para a classe _enviar_email ----
+
+def test_enviar_email_chama_sendmail_com_destinatario_correto():
+    with patch("backend.routers.donations.smtplib.SMTP") as mock_smtp_class:
+        mock_smtp = MagicMock()
+        mock_smtp_class.return_value.__enter__.return_value = mock_smtp
+
+        _enviar_email("dest@email.com", "Assunto", "Corpo")
+
+        args = mock_smtp.sendmail.call_args[0]
+        assert args[1] == "dest@email.com"
+
+
+def test_enviar_email_chama_starttls():
+    with patch("backend.routers.donations.smtplib.SMTP") as mock_smtp_class:
+        mock_smtp = MagicMock()
+        mock_smtp_class.return_value.__enter__.return_value = mock_smtp
+
+        _enviar_email("dest@email.com", "Assunto", "Corpo")
+
+        mock_smtp.starttls.assert_called_once()
+
+
+def test_enviar_email_chama_login_com_credenciais_do_settings():
+    with patch("backend.routers.donations.smtplib.SMTP") as mock_smtp_class:
+        mock_smtp = MagicMock()
+        mock_smtp_class.return_value.__enter__.return_value = mock_smtp
+
+        _enviar_email("dest@email.com", "Assunto", "Corpo")
+
+        mock_smtp.login.assert_called_once_with(settings.SMTP_EMAIL, settings.SMTP_SENHA)
+
+
+def test_enviar_email_abre_conexao_com_host_e_porta_corretos():
+    with patch("backend.routers.donations.smtplib.SMTP") as mock_smtp_class:
+        mock_smtp = MagicMock()
+        mock_smtp_class.return_value.__enter__.return_value = mock_smtp
+
+        _enviar_email("dest@email.com", "Assunto", "Corpo")
+
+        mock_smtp_class.assert_called_once_with(settings.SMTP_HOST, settings.SMTP_PORT)
+
+
+def test_enviar_email_propaga_excecao_do_smtp():
+    with patch("backend.routers.donations.smtplib.SMTP") as mock_smtp_class:
+        mock_smtp = MagicMock()
+        mock_smtp_class.return_value.__enter__.return_value = mock_smtp
+        mock_smtp.sendmail.side_effect = smtplib.SMTPException("Falha no envio")
+
+        with pytest.raises(smtplib.SMTPException, match="Falha no envio"):
+            _enviar_email("dest@email.com", "Assunto", "Corpo")
+
+
+def test_enviar_email_chama_ehlo_antes_de_starttls():
+    with patch("backend.routers.donations.smtplib.SMTP") as mock_smtp_class:
+        mock_smtp = MagicMock()
+        mock_smtp_class.return_value.__enter__.return_value = mock_smtp
+
+        _enviar_email("dest@email.com", "Assunto", "Corpo")
+
+        chamadas = [c[0] for c in mock_smtp.method_calls]
+        assert chamadas.index("ehlo") < chamadas.index("starttls")
+
+
+def test_enviar_email_inclui_assunto_correto_no_mime():
+    with patch("backend.routers.donations.smtplib.SMTP") as mock_smtp_class:
+        mock_smtp = MagicMock()
+        mock_smtp_class.return_value.__enter__.return_value = mock_smtp
+
+        _enviar_email("dest@email.com", "Meu Assunto", "Corpo")
+
+        # O terceiro argumento de sendmail é a mensagem MIME serializada
+        mime_str = mock_smtp.sendmail.call_args[0][2]
+        assert "Meu Assunto" in mime_str

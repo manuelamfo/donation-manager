@@ -35,6 +35,16 @@ jobs:
       - name: Roda testes do backend com coverage
         run: |
           pytest backend/ --cov=backend --cov-report=xml
+        env:
+            ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+            ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+            SECRET_KEY: ${{ secrets.SECRET_KEY }}
+            ALGORITHM: ${{ secrets.ALGORITHM }}
+            ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
+            SMTP_EMAIL: ${{ secrets.SMTP_EMAIL }}
+            SMTP_SENHA: ${{ secrets.SMTP_SENHA }}
+            SMTP_HOST: ${{ secrets.SMTP_HOST }}
+            SMTP_PORT: ${{ secrets.SMTP_PORT }}
         shell: bash
 
       - name: Upload coverage no codecov

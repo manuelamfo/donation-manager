@@ -1,4 +1,4 @@
-# Trabalho Prático - Teste de Software
+# Donation Manager
 
 ## Setup
 
@@ -58,7 +58,7 @@ npm run dev
 ---
 
 
-Sistema de automação para notificação assíncrona de e-mails, incluindo validação por testes na aplicação.
+Sistema de automação para notificação assíncrona de e-mails, incluindo validação por testes de unidade e integração na aplicação. A aplicação é resultante do Trabalho Prático da disciplina de Teste de Software, do Departamento de Ciência da Computação/UFMG.
 
 **Funcionalidades:**
 - Envio automático mensal de informes/newsletter para uma lista de e-mails:

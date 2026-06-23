@@ -213,3 +213,73 @@ def test_enviar_email_inclui_assunto_correto_no_mime():
         # O terceiro argumento de sendmail é a mensagem MIME serializada
         mime_str = mock_smtp.sendmail.call_args[0][2]
         assert "Meu Assunto" in mime_str
+    
+# ---- Testes de unidade adicionais ----
+# Fronteira: nome com exatamente 2 caracteres (mínimo válido)
+def test_donation_create_nome_com_dois_caracteres_e_aceito():
+    doacao = DonationCreate(
+        name="Li", email="li@email.com", amount=10.0, date=date(2024, 1, 1)
+    )
+
+    assert doacao.name == "Li"
+
+
+# Fronteira: senha com exatamente 6 caracteres (mínimo válido)
+def test_login_schema_senha_com_seis_caracteres_e_aceita():
+    login = LoginSchema(email="admin@email.com", password="abc123")
+
+    assert login.password == "abc123"
+
+
+# EmailSendRequest: lista de destinatários vazia deve falhar
+def test_email_send_request_lista_vazia_levanta_validation_error():
+    with pytest.raises(ValidationError) as exc_info:
+        EmailSendRequest(emails=[], subject="Assunto", body="Corpo")
+
+    erros = exc_info.value.errors()
+    assert any(e["loc"][-1] == "emails" for e in erros)
+
+
+# EmailSendRequest: campo emails ausente deve falhar
+def test_email_send_request_campo_emails_ausente_levanta_validation_error():
+    with pytest.raises(ValidationError) as exc_info:
+        EmailSendRequest(subject="Assunto", body="Corpo")
+
+    erros = exc_info.value.errors()
+    assert any(e["loc"][-1] == "emails" for e in erros)
+
+
+# _enviar_email: remetente no sendmail deve ser o SMTP_EMAIL das settings
+def test_enviar_email_remetente_no_sendmail_e_o_smtp_email():
+    with patch("backend.routers.donations.smtplib.SMTP") as mock_smtp_class:
+        mock_smtp = MagicMock()
+        mock_smtp_class.return_value.__enter__.return_value = mock_smtp
+
+        _enviar_email("dest@email.com", "Assunto", "Corpo")
+
+        args = mock_smtp.sendmail.call_args[0]
+        assert args[0] == settings.SMTP_EMAIL
+
+
+# _enviar_email: corpo da mensagem MIME deve conter o texto enviado
+def test_enviar_email_inclui_corpo_correto_no_mime():
+    with patch("backend.routers.donations.smtplib.SMTP") as mock_smtp_class:
+        mock_smtp = MagicMock()
+        mock_smtp_class.return_value.__enter__.return_value = mock_smtp
+
+        _enviar_email("dest@email.com", "Assunto", "Texto do corpo aqui")
+
+        mime_str = mock_smtp.sendmail.call_args[0][2]
+        assert "Texto do corpo aqui" in mime_str
+
+
+# _enviar_email: login deve ser chamado após starttls (ordem do handshake SMTP)
+def test_enviar_email_login_ocorre_apos_starttls():
+    with patch("backend.routers.donations.smtplib.SMTP") as mock_smtp_class:
+        mock_smtp = MagicMock()
+        mock_smtp_class.return_value.__enter__.return_value = mock_smtp
+
+        _enviar_email("dest@email.com", "Assunto", "Corpo")
+
+        chamadas = [c[0] for c in mock_smtp.method_calls]
+        assert chamadas.index("starttls") < chamadas.index("login")

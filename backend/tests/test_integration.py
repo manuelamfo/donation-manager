@@ -150,3 +150,7 @@ def test_deletar_doacao(client):
 
     response = client.delete(f"/donations/{donation_id}")
     assert response.status_code == status.HTTP_204_NO_CONTENT
+
+def test_deletar_doacao_inexistente(client):
+    response = client.delete("/donations/99999")
+    assert response.status_code == status.HTTP_404_NOT_FOUND

@@ -1,5 +1,12 @@
 # Donation Manager
 
+[![CI](https://github.com/manuelamfo/donation-manager/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/manuelamfo/donation-manager/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/manuelamfo/donation-manager/branch/main/graph/badge.svg)](https://codecov.io/gh/manuelamfo/donation-manager)
+[![Commits](https://img.shields.io/github/commit-activity/t/manuelamfo/donation-manager?label=commits&style=flat)](https://github.com/manuelamfo/donation-manager/commits/main)
+[![Contributors](https://img.shields.io/github/contributors/manuelamfo/donation-manager?style=flat)](https://github.com/manuelamfo/donation-manager/graphs/contributors)
+
+---
+
 ## Membros
 - Ari Gonçalves da Silva Filho
 - Manuela Monteiro Fernandes de Oliveira

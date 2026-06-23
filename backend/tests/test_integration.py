@@ -140,3 +140,13 @@ def test_listar_doacoes(client):
 
     assert response.status_code == status.HTTP_200_OK
     assert len(response.json()) == 2
+
+def test_deletar_doacao(client):
+    response = client.post("/donations/", json={
+        "name": "Samuel", "email": "samuel@email.com",
+        "amount": 35.0, "date": "2024-06-01"
+    })
+    donation_id = response.json()["id"]
+
+    response = client.delete(f"/donations/{donation_id}")
+    assert response.status_code == status.HTTP_204_NO_CONTENT

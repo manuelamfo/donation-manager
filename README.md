@@ -1,12 +1,86 @@
 # Donation Manager
 
-## Setup
+[![CI](https://github.com/manuelamfo/donation-manager/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/manuelamfo/donation-manager/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/manuelamfo/donation-manager/branch/main/graph/badge.svg)](https://codecov.io/gh/manuelamfo/donation-manager)
+[![Commits](https://img.shields.io/github/commit-activity/t/manuelamfo/donation-manager?label=commits&style=flat)](https://github.com/manuelamfo/donation-manager/commits/main)
+[![Contributors](https://img.shields.io/github/contributors/manuelamfo/donation-manager?style=flat)](https://github.com/manuelamfo/donation-manager/graphs/contributors)
 
-### Backend
+---
 
-É preciso criar um arquivo .env com a seguinte configuração:
+## Membros
+- Ari Gonçalves da Silva Filho
+- Manuela Monteiro Fernandes de Oliveira
+- Sarah Menks Sperber
 
+---
+
+## Sobre o sistema
+
+Trata-se de uma plataforma full-stack desenvolvida para gerir doações, facilitar a administração financeira e o relacionamento com doadores. Ela centraliza o registro de entradas financeiras em um painel intuitivo, permitindo que os gestores tenham controle total sobre as transações e o histórico de contribuições, sem depender de planilhas complexas.
+
+Os administradores podem analisar as doações agrupadas mensalmente em um formato de sanfona (expansível), realizar ações em lote e disparar e-mails personalizados diretamente do painel para os doadores selecionados. Isso transforma uma tarefa administrativa em uma ferramenta ativa de engajamento e transparência com a base de apoiadores.
+
+---
+
+## Principais tecnologias utilizadas
+
+| Tecnologia | Documentação | Propósito |
+|------------|---------------------|------------|
+| **FastAPI** | https://fastapi.tiangolo.com/ | Framework principal responsável pela criação da API REST e pelo gerenciamento das requisições HTTP. |
+| **Uvicorn** | https://www.uvicorn.org/ | Servidor ASGI de alta performance utilizado para executar a aplicação FastAPI. |
+| **SQLModel** | https://sqlmodel.tiangolo.com/ | ORM responsável pelo mapeamento entre objetos Python e tabelas do banco de dados, além da validação de modelos. |
+| **Pydantic** | https://docs.pydantic.dev/ | Realiza a validação e serialização de dados, garantindo a integridade das informações recebidas e enviadas pela API. |
+| **Pytest** | https://docs.pytest.org/ | Framework principal para a escrita e execução dos testes automatizados. |
+| **React** | https://react.dev/ | Biblioteca JavaScript utilizada para a construção da interface do usuário de forma reativa e componentizada. |
+| **Tailwind CSS** | https://tailwindcss.com/docs | Framework CSS utilitário utilizado para a estilização rápida, responsiva e consistente da interface. |
+
+---
+
+## Como executar o projeto e os testes
+
+### Pré-requisitos
+
+Antes de iniciar, certifique-se de possuir as seguintes ferramentas instaladas em sua máquina:
+
+- Python 3.10+
+- Node.js 18+
+- npm (geralmente instalado junto ao Node.js)
+- Git (opcional, para clonagem do repositório)
+
+---
+
+### Configuração do Backend
+
+#### 1. Acesse a pasta do repositório
+
+```bash
+cd backend
 ```
+
+#### 2. Crie e ative um ambiente virtual
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+**No Windows:**
+
+```bash
+venv\Scripts\activate
+```
+
+#### 3. Instale as dependências
+
+```bash
+pip install -r requirements.txt
+```
+
+#### 4. Configure as variáveis de ambiente
+
+Crie um arquivo chamado `.env` na raiz da pasta `backend` contendo:
+
+```env
 ADMIN_EMAIL=admin@gmail.com
 ADMIN_PASSWORD=admin123
 
@@ -14,70 +88,72 @@ SECRET_KEY=chave-super-secreta
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=60
 
-SMTP_EMAIL=seu-email@gmail.com  
-SMTP_SENHA="sua-senha-de-app" # Veja as instruções para resgatar a senha de app
+SMTP_EMAIL=seu-email@gmail.com
+SMTP_SENHA="sua-senha-de-app"
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 ```
 
-Depois, para rodar a API, execute:
-
+#### 5. Execute a API
 
 ```bash
-cd backend
-
-python3 -m venv venv
-source venv/bin/activate
-
-pip3 install -r requirements.txt
-
-uvicorn main:app --reload
+cd ..
+uvicorn backend.main:app --reload
 ```
 
-### Frontend
+Após a inicialização, a API estará disponível em `http://localhost:8000`
 
+---
+
+### Testes de unidade e integração
+
+#### Rode o comando do pytest abaixo
+
+```bash
+pytest backend/
+```
+
+---
+
+### Configuração do Frontend
+
+Abra um novo terminal e execute:
+
+#### 1. Acesse a pasta do frontend
 
 ```bash
 cd frontend
+```
 
+#### 2. Instale as dependências
+
+```bash
 npm install
+```
 
+#### 3. Inicie a aplicação
+
+```bash
 npm run dev
 ```
 
----
-
-## Resgatar "sua senha de app"
-
-1. Acesse [https://myaccount.google.com/](https://myaccount.google.com/)
-2. Vá em "Segurança e Login" e garanta que a "Verificação em duas etapas" está ativada
-3. Ainda em [https://myaccount.google.com/](https://myaccount.google.com/), pesquise por "senhas de app"
-4. Crie um nome para identificar sua senha e SALVE A SENHA. Depois de criada, a senha não pode ser resgatada novamente
-5. Copie a senha gerada e cole no seu .env. _Deixe a senha entre aspas_
+O frontend estará disponível em: `http://localhost:5173`
 
 ---
 
+### Como gerar uma senha de aplicativo do Google
 
-Sistema de automação para notificação assíncrona de e-mails, incluindo validação por testes de unidade e integração na aplicação. A aplicação é resultante do Trabalho Prático da disciplina de Teste de Software, do Departamento de Ciência da Computação/UFMG.
+Para permitir o envio de e-mails pela aplicação, é necessário gerar uma senha de aplicativo na conta Google utilizada.
 
-**Funcionalidades:**
-- Envio automático mensal de informes/newsletter para uma lista de e-mails:
-  - Essa lista é atualizável, ou seja, pode-se adicionar, editar ou remover os remetentes da mensagem;
-  - A mensagem também é customizável e pode ser editada antes do e-mail ser enviado;
- 
-**Tecnologias:**
-- Linguagem utilizada: Python 3.12 com bibliotecas (como pandas, smtplib e email);
-- Interação inicial via linha de comando;
-- Testes que serão executados:
-  - Testes de Unidade;
-  - Testes de Integração; 
+1. Acesse `https://myaccount.google.com/`.
+2. Vá até **Segurança**.
+3. Ative a opção **Verificação em duas etapas** (caso ainda não esteja habilitada).
+4. Pesquise por **"Senhas de app"** na barra de pesquisa da conta Google.
+5. Crie uma nova senha para a aplicação.
+6. Copie a senha gerada e salve-a no arquivo `.env` no campo:
 
-**Pontos futuros a serem considerados:**
-- Criação de uma interface gráfica;
-- Integração com planilhas para enviar um e-mail quando reconhece uma nova entrada;
+```env
+SMTP_SENHA="senha-gerada-pelo-google"
+```
 
-*Integrantes*: Ari Gonçalves da Silva Filho, Manuela Monteiro Fernandes de Oliveira e Sarah Menks Sperber
-
-
-**Referências:**
-- [https://realpython.com/python-send-email/](https://realpython.com/python-send-email/)
+> **Importante:** a senha exibida pelo Google aparece apenas uma única vez. Após fechar a janela, não será possível visualizá-la novamente.

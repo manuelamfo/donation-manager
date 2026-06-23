@@ -9,4 +9,3 @@ pydantic[email]
 PyJWT
 dotenv
 config
-httphx
